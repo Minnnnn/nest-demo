@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Header, HttpCode, Param, Redirect } from '@nestjs/common';
 import { CountService } from './count.service';
 
 @Controller('count')
@@ -7,8 +7,11 @@ export class CountController {
 		private readonly countSrv: CountService
 	) { }
 
-	@Get('/getCount')
-	getCount(): string {
+	@Get('/getCount/:id/:name')
+	@Header('Cache-Control', 'none')
+	@HttpCode(202)
+	getCount(@Param() params: Object, @Param('id') id: string): string {
+		console.log('params: ', params, id)
 		this.countSrv.setCount('b');
 		return this.countSrv.getCount();
 	}
